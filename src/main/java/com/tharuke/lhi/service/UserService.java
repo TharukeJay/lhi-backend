@@ -2,10 +2,13 @@ package com.tharuke.lhi.service;
 
 import com.tharuke.lhi.repository.AuthenticationUserRepository;
 import com.tharuke.lhi.repository.model.LoginRequest;
+import com.tharuke.lhi.repository.model.RegisterRequest;
 import com.tharuke.lhi.repository.model.user.AuthenticationUser;
+import com.tharuke.lhi.repository.model.user.UserStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +47,35 @@ public class UserService {
         } else {
             response.put("message", message);
             response.put("logged",false);
+        }
+        return response;
+    }
+
+    public Map<String, Object> saveUser(RegisterRequest registerRequest) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (authenticationUserRepository.existsByUserName(registerRequest.getUserName())) {
+            response.put("message","User name already exist");
+        } else if (authenticationUserRepository.existsByEmail(registerRequest.getEmail())) {
+            response.put("message","Email already exist");
+        } else {
+            AuthenticationUser user = new AuthenticationUser();
+            user.setEmail(registerRequest.getEmail());
+            user.setUserName(registerRequest.getUserName());
+            user.setFirstName(registerRequest.getFirstName());
+            user.setLastName(registerRequest.getLastName());
+            user.setAddress(registerRequest.getAddress());
+            user.setPassword(registerRequest.getPassword());
+            user.setTelephone(registerRequest.getTelephone());
+            user.setUserRole(AuthenticationUser.UserRole.ROLE_USER);
+            user.setStatus(UserStatus.ACTIVE);
+            AuthenticationUser savedUser = authenticationUserRepository.save(user);
+
+            response.put("message", "success");
+            response.put("isAdmin", false);
+            response.put("logged", true);
+            response.put("user", savedUser.getId());
+
         }
         return response;
     }

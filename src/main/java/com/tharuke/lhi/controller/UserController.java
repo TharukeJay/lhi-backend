@@ -2,6 +2,7 @@ package com.tharuke.lhi.controller;
 
 
 import com.tharuke.lhi.repository.model.LoginRequest;
+import com.tharuke.lhi.repository.model.RegisterRequest;
 import com.tharuke.lhi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,12 @@ public class UserController {
         Map<String,Object> loggedUser = userService.logUser(loginRequest);
 
         return ResponseEntity.ok(loggedUser);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Map<String,Object>> registerUser(@RequestBody RegisterRequest registerRequest) {
+        Map<String, Object> savedUser = userService.saveUser(registerRequest);
+
+        return ResponseEntity.ok(savedUser);
     }
 }
