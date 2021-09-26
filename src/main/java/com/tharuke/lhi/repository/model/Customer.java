@@ -9,9 +9,9 @@ import lombok.ToString;
 @ToString
 public class Customer extends PersistObject{
 
-    private String shopName;
+    private String customerName;
     private String address;
-    private String shopId;
+    private String customerId;
     private String contactNumber;
     private String town;
 }
